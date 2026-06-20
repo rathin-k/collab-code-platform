@@ -1,23 +1,15 @@
-import { useEffect } from "react";
-import { io } from "socket.io-client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Room from "./pages/Room";
 
 function App() {
-  useEffect(() => {
-    const socket = io("http://localhost:5000");
-
-    socket.on("connect", () => {
-      console.log("Connected:", socket.id);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
   return (
-    <div>
-      <h1>Collaborative Coding Platform</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/room/:roomId" element={<Room />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
