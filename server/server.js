@@ -25,8 +25,6 @@ io.on("connection", (socket) => {
   console.log(`${socket.id} joined room ${roomId}`);
 });
 
-
-
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
   });
