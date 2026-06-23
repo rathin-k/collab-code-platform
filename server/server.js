@@ -20,10 +20,13 @@ io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
 
   socket.on("join-room", (roomId) => {
-  socket.join(roomId);
+    socket.join(roomId);
+    console.log(`${socket.id} joined room ${roomId}`);
+  });
 
-  console.log(`${socket.id} joined room ${roomId}`);
-});
+  socket.on("code-change", (data) => {
+    socket.to(data.roomId).emit("receive-code", data.code);
+  });
 
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);

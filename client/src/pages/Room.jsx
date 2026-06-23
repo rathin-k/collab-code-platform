@@ -14,6 +14,16 @@ function Room() {
     console.log(`Joined room: ${roomId}`);
   }, [roomId]);
 
+  useEffect(() => {
+  socket.on("receive-code", (incomingCode) => {
+    setCode(incomingCode);
+  });
+
+  return () => {
+    socket.off("receive-code");
+  };
+}, []);
+
   return (
     <div>
       <h1>Room Page</h1>
@@ -23,7 +33,16 @@ function Room() {
         height="80vh"
         defaultLanguage="javascript"
         value={code}
-        onChange={(value) => setCode(value)}
+        onChange={(value) => {
+          const newCode = value || "";
+
+           setCode(newCode);
+
+           socket.emit("code-change", {
+           roomId,
+           code: newCode,
+           });
+          }}
       />
     </div>
   );
