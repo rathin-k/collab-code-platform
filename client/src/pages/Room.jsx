@@ -8,6 +8,8 @@ function Room() {
 
   const [code, setCode] = useState("// Start coding here");
 
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
     socket.emit("join-room", roomId);
 
@@ -22,13 +24,30 @@ function Room() {
   return () => {
     socket.off("receive-code");
   };
-}, []);
+  }, []);
+
+  useEffect(() => {
+  socket.on("user-list", (userList) => {
+    setUsers(userList);
+  });
+
+  return () => {
+    socket.off("user-list");
+  };
+  }, []);
 
   return (
     <div>
       <h1>Room Page</h1>
       <h2>Room ID: {roomId}</h2>
+      <h3>Online Users: {users.length}</h3>
 
+      <ul>
+        {users.map((user) => (
+          <li key={user}>{user}</li>
+        ))}
+      </ul>
+      
       <Editor
         height="80vh"
         defaultLanguage="javascript"
@@ -36,13 +55,13 @@ function Room() {
         onChange={(value) => {
           const newCode = value || "";
 
-           setCode(newCode);
+          setCode(newCode);
 
-           socket.emit("code-change", {
-           roomId,
-           code: newCode,
-           });
-          }}
+          socket.emit("code-change", {
+          roomId,
+          code: newCode,
+          });
+        }}
       />
     </div>
   );
