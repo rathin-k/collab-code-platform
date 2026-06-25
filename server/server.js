@@ -21,19 +21,20 @@ io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
 
   socket.on("join-room", (roomId) => {
+
    socket.join(roomId);
 
    if (!rooms[roomId]) {
     rooms[roomId] = [];
    }
 
-  if (!rooms[roomId].includes(socket.id)) {
-   rooms[roomId].push(socket.id);
-  }
+   if (!rooms[roomId].includes(socket.id)) {
+    rooms[roomId].push(socket.id);
+   }
 
    io.to(roomId).emit("user-list", rooms[roomId]);
 
-  console.log(`${socket.id} joined room ${roomId}`);
+   console.log(`${socket.id} joined room ${roomId}`);
   });
 
   socket.on("code-change", (data) => {
@@ -57,6 +58,11 @@ io.on("connection", (socket) => {
 
     }
   });
+
+  socket.on("send-message", (data) => {
+   socket.to(data.roomId).emit("receive-message", data.message);
+  });
+
 });
 
 server.listen(5000, () => {

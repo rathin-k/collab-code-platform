@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import socket from "../socket/socket";
+import "./Room.css";
 
 function Room() {
   const { roomId } = useParams();
@@ -9,6 +10,10 @@ function Room() {
   const [code, setCode] = useState("// Start coding here");
 
   const [users, setUsers] = useState([]);
+
+  const [message, setMessage] = useState("");
+
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     socket.emit("join-room", roomId);
@@ -35,6 +40,29 @@ function Room() {
     socket.off("user-list");
   };
   }, []);
+  
+  useEffect(() => {
+   socket.on("receive-message", (incomingMessage) => {
+     setMessages((prev) => [...prev, incomingMessage]);
+   });
+
+    return () => {
+     socket.off("receive-message");
+    };
+  }, []);
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+
+    socket.emit("send-message", {
+     roomId,
+     message,
+    });
+
+   setMessages((prev) => [...prev, message]);
+
+   setMessage("");
+  };
 
   return (
     <div>
@@ -63,6 +91,25 @@ function Room() {
           });
         }}
       />
+      
+     <h2>Chat</h2>
+
+     <div  className="chat-box">
+       {messages.map((msg, index) => (
+         <p key={index}>{msg}</p>
+       ))}
+      </div>
+
+      <input
+       type="text"
+       placeholder="Type a message..."
+       value={message}
+       onChange={(e) => setMessage(e.target.value)}
+      />
+
+      <button onClick={sendMessage}>
+        Send
+      </button>
     </div>
   );
 }
