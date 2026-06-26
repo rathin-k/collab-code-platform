@@ -1,3 +1,6 @@
+require("dotenv").config();
+const connectDB = require("./config/db");
+connectDB();
 const rooms = {};
 const express = require("express");
 const http = require("http");
