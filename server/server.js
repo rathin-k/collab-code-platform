@@ -1,3 +1,4 @@
+const authRoutes = require("./routes/authRoutes");
 require("dotenv").config();
 const connectDB = require("./config/db");
 connectDB();
@@ -8,10 +9,12 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 
 const app = express();
-
+app.use(express.json());
 app.use(cors());
 
 const server = http.createServer(app);
+
+app.use("/api/auth", authRoutes);
 
 const io = new Server(server, {
   cors: {
