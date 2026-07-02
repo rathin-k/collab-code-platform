@@ -7,6 +7,8 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const User = require("./models/User");
 
 const app = express();
 app.use(express.json());
@@ -23,6 +25,31 @@ const io = new Server(server, {
   },
 });
 
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+      return next(new Error("Authentication error"));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.userId).select("-password");
+
+    if (!user) {
+      return next(new Error("User not found"));
+    }
+
+    socket.user = user;
+
+    next();
+
+  } catch (error) {
+    next(new Error("Authentication error"));
+  }
+});
+
 io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
 
@@ -34,10 +61,17 @@ io.on("connection", (socket) => {
     rooms[roomId] = [];
    }
 
-   if (!rooms[roomId].includes(socket.id)) {
-    rooms[roomId].push(socket.id);
-   }
+   const alreadyJoined = rooms[roomId].some(
+  (user) => user.socketId === socket.id
+);
 
+if (!alreadyJoined) {
+  rooms[roomId].push({
+    socketId: socket.id,
+    name: socket.user.name,
+  });
+}
+  console.log("Sending user list:", rooms[roomId]);
    io.to(roomId).emit("user-list", rooms[roomId]);
 
    console.log(`${socket.id} joined room ${roomId}`);
@@ -54,7 +88,7 @@ io.on("connection", (socket) => {
     for (const roomId in rooms) {
 
       rooms[roomId] = rooms[roomId].filter(
-        (id) => id !== socket.id
+        (user) => user.socketId !== socket.id
       );
 
       io.to(roomId).emit(
@@ -70,6 +104,8 @@ io.on("connection", (socket) => {
   });
 
 });
+
+
 
 server.listen(5000, () => {
   console.log("Server running on port 5000");

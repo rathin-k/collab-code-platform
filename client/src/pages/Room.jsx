@@ -33,6 +33,7 @@ function Room() {
 
   useEffect(() => {
   socket.on("user-list", (userList) => {
+    console.log("User List:", userList);
     setUsers(userList);
   });
 
@@ -72,7 +73,9 @@ function Room() {
 
       <ul>
         {users.map((user) => (
-          <li key={user}>{user}</li>
+          <li key={user.socketId}>
+            🟢 {user.name}
+          </li>
         ))}
       </ul>
       
