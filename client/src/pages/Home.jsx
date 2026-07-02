@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 function Home() {
+  const { user, logout } = useContext(AuthContext);
+  console.log(user);
   const [roomId, setRoomId] = useState("");
   const navigate = useNavigate();
 
@@ -15,11 +18,15 @@ function Home() {
 
     navigate(`/room/${roomId}`);
   };
+  
+  const handleLogout = () => {
+  logout();
+  navigate("/login");
+};
 
   return (
     <div>
       <h1>Collaborative Coding Platform</h1>
-
       <button onClick={createRoom}>
         Create Room
       </button>
@@ -36,6 +43,10 @@ function Home() {
 
       <button onClick={joinRoom}>
         Join Room
+      </button>
+
+      <button onClick={handleLogout}>
+        Logout
       </button>
     </div>
   );
