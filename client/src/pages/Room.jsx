@@ -60,11 +60,9 @@ function Room() {
      message,
     });
 
-   setMessages((prev) => [...prev, message]);
-
    setMessage("");
   };
-
+  console.log(messages);
   return (
     <div>
       <h1>Room Page</h1>
@@ -97,9 +95,11 @@ function Room() {
       
      <h2>Chat</h2>
 
-     <div  className="chat-box">
+      <div  className="chat-box">
        {messages.map((msg, index) => (
-         <p key={index}>{msg}</p>
+         <p key={index}>
+           <strong>{msg.sender}:</strong> {msg.message}
+         </p>
        ))}
       </div>
 

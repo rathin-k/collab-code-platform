@@ -100,8 +100,11 @@ if (!alreadyJoined) {
   });
 
   socket.on("send-message", (data) => {
-   socket.to(data.roomId).emit("receive-message", data.message);
+  io.to(data.roomId).emit("receive-message", {
+    sender: socket.user.name,
+    message: data.message,
   });
+});
 
 });
 
