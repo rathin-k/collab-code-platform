@@ -1,3 +1,4 @@
+const Room = require("./models/Room");
 const authRoutes = require("./routes/authRoutes");
 require("dotenv").config();
 const connectDB = require("./config/db");
@@ -53,8 +54,21 @@ io.use(async (socket, next) => {
 io.on("connection", (socket) => {
   console.log("User Connected:", socket.id);
 
-  socket.on("join-room", (roomId) => {
+  socket.on("join-room", async (roomId) => {
+   
+   const room = await Room.findOneAndUpdate(
+     { roomId },
+     {
+       $setOnInsert: { roomId },
+     },
+     {
+       upsert: true,
+       returnDocument: "after",
+     }
+    );
 
+   socket.emit("load-code", room.code);
+   
    socket.join(roomId);
 
    if (!rooms[roomId]) {
@@ -77,8 +91,15 @@ if (!alreadyJoined) {
    console.log(`${socket.id} joined room ${roomId}`);
   });
 
-  socket.on("code-change", (data) => {
+  socket.on("code-change", async (data) => {
+
+    await Room.findOneAndUpdate(
+      { roomId: data.roomId },
+      { code: data.code }
+    );
+
     socket.to(data.roomId).emit("receive-code", data.code);
+
   });
 
   socket.on("disconnect", () => {

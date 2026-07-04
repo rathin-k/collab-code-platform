@@ -32,6 +32,16 @@ function Room() {
   }, []);
 
   useEffect(() => {
+    socket.on("load-code", (savedCode) => {
+      setCode(savedCode);
+    });
+
+    return () => {
+     socket.off("load-code");
+    };
+  }, []);
+
+  useEffect(() => {
   socket.on("user-list", (userList) => {
     console.log("User List:", userList);
     setUsers(userList);
