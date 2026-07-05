@@ -69,6 +69,8 @@ io.on("connection", (socket) => {
 
    socket.emit("load-code", room.code);
    
+   socket.emit("load-chat", room.chat);
+
    socket.join(roomId);
 
    if (!rooms[roomId]) {
@@ -120,11 +122,25 @@ if (!alreadyJoined) {
     }
   });
 
-  socket.on("send-message", (data) => {
-  io.to(data.roomId).emit("receive-message", {
+  socket.on("send-message", async (data) => {
+
+  const chatMessage = {
     sender: socket.user.name,
     message: data.message,
-  });
+    timestamp: new Date(),
+  };
+
+  await Room.findOneAndUpdate(
+    { roomId: data.roomId },
+    {
+      $push: {
+        chat: chatMessage,
+      },
+    }
+  );
+
+  io.to(data.roomId).emit("receive-message", chatMessage);
+
 });
 
 });

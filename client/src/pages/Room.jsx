@@ -42,6 +42,16 @@ function Room() {
   }, []);
 
   useEffect(() => {
+    socket.on("load-chat", (chatHistory) => {
+      setMessages(chatHistory);
+   });
+
+    return () => {
+     socket.off("load-chat");
+    };
+  }, []);
+
+  useEffect(() => {
   socket.on("user-list", (userList) => {
     console.log("User List:", userList);
     setUsers(userList);
