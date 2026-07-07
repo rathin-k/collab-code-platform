@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import socket from "../socket/socket";
+import RoomHeader from "../components/RoomHeader";
+import OnlineUsers from "../components/OnlineUsers";
+import Chat from "../components/Chat";
+import CodeEditor from "../components/Editor";
 import "./Room.css";
 
 function Room() {
@@ -85,54 +89,22 @@ function Room() {
   console.log(messages);
   return (
     <div>
-      <h1>Room Page</h1>
-      <h2>Room ID: {roomId}</h2>
-      <h3>Online Users: {users.length}</h3>
-
-      <ul>
-        {users.map((user) => (
-          <li key={user.socketId}>
-            🟢 {user.name}
-          </li>
-        ))}
-      </ul>
+      <RoomHeader roomId={roomId} />
+      <OnlineUsers users={users} />
       
-      <Editor
-        height="80vh"
-        defaultLanguage="javascript"
-        value={code}
-        onChange={(value) => {
-          const newCode = value || "";
-
-          setCode(newCode);
-
-          socket.emit("code-change", {
-          roomId,
-          code: newCode,
-          });
-        }}
+      <CodeEditor
+       code={code}
+       setCode={setCode}
+       roomId={roomId}
+       socket={socket}
       />
       
-     <h2>Chat</h2>
-
-      <div  className="chat-box">
-       {messages.map((msg, index) => (
-         <p key={index}>
-           <strong>{msg.sender}:</strong> {msg.message}
-         </p>
-       ))}
-      </div>
-
-      <input
-       type="text"
-       placeholder="Type a message..."
-       value={message}
-       onChange={(e) => setMessage(e.target.value)}
+     <Chat
+       messages={messages}
+       message={message}
+       setMessage={setMessage}
+       sendMessage={sendMessage}
       />
-
-      <button onClick={sendMessage}>
-        Send
-      </button>
     </div>
   );
 }
