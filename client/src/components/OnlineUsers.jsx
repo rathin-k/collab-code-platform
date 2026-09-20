@@ -1,3 +1,5 @@
+import "../styles/OnlineUsers.css";
+
 function OnlineUsers({ users }) {
   return (
     <div className="users-panel">

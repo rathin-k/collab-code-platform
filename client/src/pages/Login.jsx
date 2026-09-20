@@ -1,69 +1,82 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import "../styles/Login.css";
 
 function Login() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
+
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await login({
-      email,
-      password,
-    });
+    try {
+      const response = await login({
+        email,
+        password,
+      });
 
-    // Save JWT
-    localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-    // Save user
-    localStorage.setItem(
-      "user",
-      JSON.stringify(response.data.user)
-    );
+      setUser(response.data.user);
 
-    alert("Login Successful");
-
-    navigate("/");
-
-  } catch (error) {
-    alert(error.response?.data?.message || "Login Failed");
-  }
-};
+      navigate("/");
+    } catch (error) {
+      alert(error.response?.data?.message || "Login Failed");
+    }
+  };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="login-page">
+      <div className="login-card">
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p>Login to your Collaborative Coding Platform</p>
+        </div>
 
-        <br />
-        <br />
+        <form onSubmit={handleLogin}>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div className="login-input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <br />
-        <br />
+          <div className="login-input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit">
-          Login
-        </button>
-      </form>
+          <button type="submit" className="login-button">
+            Login
+          </button>
+
+        </form>
+
+        <p className="signup-text">
+          Don't have an account?{" "}
+          <Link to="/signup">Create Account</Link>
+        </p>
+
+      </div>
     </div>
   );
 }

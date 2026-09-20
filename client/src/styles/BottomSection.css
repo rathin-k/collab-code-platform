@@ -1,0 +1,33 @@
+.sidebar {
+  width: 360px;
+  height: 100%;
+
+  display: grid;
+  grid-template-rows: 200px minmax(0, 1fr);
+
+  gap: 16px;
+
+  min-height: 0;
+}
+
+.users-wrapper,
+.chat-wrapper {
+  background: #27293d;
+
+  border: 1px solid #2f3345;
+  border-radius: 14px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chat-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+}

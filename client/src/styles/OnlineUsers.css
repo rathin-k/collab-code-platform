@@ -1,0 +1,18 @@
+.users-panel{
+    height:100%;
+}
+
+.users-panel h3{
+    margin-bottom:20px;
+}
+
+.users-panel ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.users-panel li{
+    margin:12px 0;
+    font-size:18px;
+}

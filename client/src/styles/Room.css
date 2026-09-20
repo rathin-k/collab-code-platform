@@ -1,0 +1,47 @@
+.room-page {
+  width: 100%;
+  height: 100vh;
+  background: #0f1117;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.room-content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: row;
+
+  gap: 16px;
+  padding: 16px;
+
+  min-height: 0;
+  min-width: 0;
+
+  box-sizing: border-box;
+}
+
+.editor-wrapper {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  min-height: 0;
+
+  background: #1f1f1f;
+  border-radius: 14px;
+
+  overflow: hidden;
+}
+
+.room-content > .sidebar {
+  flex: 0 0 360px;
+
+  width: 360px;
+  height: 100%;
+
+  min-height: 0;
+}
+

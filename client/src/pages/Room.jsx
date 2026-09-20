@@ -1,110 +1,128 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Editor from "@monaco-editor/react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import socket from "../socket/socket";
+
 import RoomHeader from "../components/RoomHeader";
-import OnlineUsers from "../components/OnlineUsers";
-import Chat from "../components/Chat";
 import CodeEditor from "../components/Editor";
-import "./Room.css";
+import BottomSection from "../components/BottomSection";
+
+import "../styles/Room.css";
 
 function Room() {
   const { roomId } = useParams();
 
   const [code, setCode] = useState("// Start coding here");
-
   const [users, setUsers] = useState([]);
-
   const [message, setMessage] = useState("");
-
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    socket.emit("join-room", roomId);
-
-    console.log(`Joined room: ${roomId}`);
-  }, [roomId]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-  socket.on("receive-code", (incomingCode) => {
-    setCode(incomingCode);
-  });
+    const token = localStorage.getItem("token");
 
-  return () => {
-    socket.off("receive-code");
-  };
-  }, []);
+    socket.auth = {
+      token,
+    };
 
-  useEffect(() => {
-    socket.on("load-code", (savedCode) => {
+    const handleReceiveCode = (incomingCode) => {
+      setCode(incomingCode);
+    };
+
+    const handleLoadCode = (savedCode) => {
       setCode(savedCode);
-    });
-
-    return () => {
-     socket.off("load-code");
     };
-  }, []);
 
-  useEffect(() => {
-    socket.on("load-chat", (chatHistory) => {
+    const handleLoadChat = (chatHistory) => {
       setMessages(chatHistory);
-   });
+    };
+
+    const handleUserList = (userList) => {
+      console.log("🔥 Received user list:", userList);
+      setUsers(userList);
+    };
+
+    const handleReceiveMessage = (incomingMessage) => {
+      setMessages((prev) => [...prev, incomingMessage]);
+    };
+
+    const joinRoom = () => {
+      console.log("Joining room:", roomId);
+      socket.emit("join-room", roomId);
+    };
+
+    socket.on("receive-code", handleReceiveCode);
+    socket.on("load-code", handleLoadCode);
+    socket.on("load-chat", handleLoadChat);
+    socket.on("user-list", handleUserList);
+    socket.on("receive-message", handleReceiveMessage);
+
+    if (socket.connected) {
+      joinRoom();
+    } else {
+      socket.once("connect", joinRoom);
+      socket.connect();
+    }
 
     return () => {
-     socket.off("load-chat");
+      socket.off("receive-code", handleReceiveCode);
+      socket.off("load-code", handleLoadCode);
+      socket.off("load-chat", handleLoadChat);
+      socket.off("user-list", handleUserList);
+      socket.off("receive-message", handleReceiveMessage);
+      socket.off("connect", joinRoom);
     };
-  }, []);
-
-  useEffect(() => {
-  socket.on("user-list", (userList) => {
-    console.log("User List:", userList);
-    setUsers(userList);
-  });
-
-  return () => {
-    socket.off("user-list");
-  };
-  }, []);
-  
-  useEffect(() => {
-   socket.on("receive-message", (incomingMessage) => {
-     setMessages((prev) => [...prev, incomingMessage]);
-   });
-
-    return () => {
-     socket.off("receive-message");
-    };
-  }, []);
+  }, [roomId]);
 
   const sendMessage = () => {
     if (!message.trim()) return;
 
     socket.emit("send-message", {
-     roomId,
-     message,
+      roomId,
+      message,
     });
 
-   setMessage("");
+    setMessage("");
   };
-  console.log(messages);
+
+  const handleLeaveRoom = () => {
+    socket.emit("leave-room", roomId);
+
+    setUsers([]);
+
+    navigate("/");
+  };
+
   return (
-    <div>
-      <RoomHeader roomId={roomId} />
-      <OnlineUsers users={users} />
-      
-      <CodeEditor
-       code={code}
-       setCode={setCode}
-       roomId={roomId}
-       socket={socket}
+    <div className="room-page">
+
+      <RoomHeader
+        roomId={roomId}
+        handleLeaveRoom={handleLeaveRoom}
       />
-      
-     <Chat
-       messages={messages}
-       message={message}
-       setMessage={setMessage}
-       sendMessage={sendMessage}
-      />
+
+      <div className="room-content">
+
+        <main className="editor-wrapper">
+          <CodeEditor
+            code={code}
+            setCode={setCode}
+            roomId={roomId}
+            socket={socket}
+          />
+        </main>
+
+        <BottomSection
+          users={users}
+          messages={messages}
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+        />
+
+      </div>
+
     </div>
   );
 }

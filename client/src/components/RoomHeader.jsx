@@ -1,11 +1,28 @@
-function RoomHeader({ roomId }) {
+import "../styles/Header.css";
+
+function RoomHeader({ roomId, handleLeaveRoom }) {
   return (
-    <div className="room-header">
-      <h1>Collaborative Coding Platform</h1>
-      <p className="room-id">
-        Room ID: <strong>{roomId}</strong>
-      </p>
-    </div>
+    <header className="room-header">
+
+      <div className="room-title">
+        <h1>👨‍💻 Collaborative Coding Platform</h1>
+        <p>Room ID: {roomId}</p>
+      </div>
+
+      <div className="header-right">
+        <span className="connection-status">
+          🟢 Connected
+        </span>
+
+        <button
+          className="leave-btn"
+          onClick={handleLeaveRoom}
+        >
+          🚪 Leave Room
+        </button>
+      </div>
+
+    </header>
   );
 }
 

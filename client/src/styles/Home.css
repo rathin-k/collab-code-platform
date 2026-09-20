@@ -1,0 +1,192 @@
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0f1117;
+  padding: 20px;
+  box-sizing: border-box;
+  border: none;
+}
+
+.home-card {
+  width: 100%;
+  max-width: 650px;
+  background: #181b24;
+  border: 1px solid #2a2f3a;
+  border-radius: 16px;
+  padding: 45px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+
+.home-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.home-header h1 {
+  margin: 0;
+  font-size: 34px;
+  color: #f5f7fa;
+}
+
+.home-header p {
+  margin-top: 10px;
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* Welcome */
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.welcome-section h2 {
+  margin: 0;
+  color: #f5f7fa;
+  font-size: 22px;
+}
+
+.welcome-section p {
+  margin-top: 8px;
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Room sections */
+
+.room-section {
+  padding: 20px;
+  background: #11141b;
+  border: 1px solid #2a2f3a;
+  border-radius: 10px;
+}
+
+.room-section h3 {
+  margin: 0;
+  color: #f5f7fa;
+  font-size: 17px;
+}
+
+.room-section p {
+  margin: 7px 0 16px;
+  color: #8f96a3;
+  font-size: 13px;
+}
+
+/* Create room */
+
+.create-room-button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #4f8cff;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.create-room-button:hover {
+  background: #3d7bea;
+}
+
+.create-room-button:active {
+  transform: scale(0.98);
+}
+
+/* Divider */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #2a2f3a;
+}
+
+.divider span {
+  padding: 0 5px;
+}
+
+/* Join room */
+
+.join-container {
+  display: flex;
+  gap: 10px;
+}
+
+.join-container input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #353b48;
+  border-radius: 8px;
+  background: #0f1117;
+  color: #f5f7fa;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.join-container input::placeholder {
+  color: #6b7280;
+}
+
+.join-container input:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.15);
+}
+
+.join-room-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #2a2f3a;
+  color: #f5f7fa;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.join-room-button:hover {
+  background: #353b48;
+}
+
+/* Logout */
+
+.logout-button {
+  display: block;
+  margin: 28px auto 0;
+  padding: 9px 25px;
+  border: 1px solid #353b48;
+  border-radius: 7px;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-button:hover {
+  background: #252932;
+  color: #f5f7fa;
+}
