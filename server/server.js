@@ -1,5 +1,7 @@
 const Room = require("./models/Room");
 const authRoutes = require("./routes/authRoutes");
+const codeRoutes = require("./routes/codeRoutes");
+
 require("dotenv").config();
 
 const connectDB = require("./config/db");
@@ -20,6 +22,7 @@ app.use(cors());
 const server = http.createServer(app);
 
 app.use("/api/auth", authRoutes);
+app.use("/api", codeRoutes);
 
 const io = new Server(server, {
   cors: {
