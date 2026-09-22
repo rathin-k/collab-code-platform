@@ -74,15 +74,23 @@ Auth Controller
 MongoDB
      ↓
 JWT
-Real-Time Collaboration Flow
+```
+
+### Real-Time Collaboration Flow
+
+```text
 User A ─────┐
             │
 User B ─────┼──→ Socket.IO Server
             │          ↓
-User C ─────┘       Room
+User C ─────┘        Room
                      ↓
               Code / Chat / Presence
-Code Execution Flow
+```
+
+### Code Execution Flow
+
+```text
 Monaco Editor
      ↓
 Run Code
@@ -100,7 +108,13 @@ Program Execution
 Output / Error / Timeout
      ↓
 React UI
-📁 Project Structure
+```
+
+---
+
+## 📁 Project Structure
+
+```text
 collab-code-platform/
 │
 ├── client/
@@ -184,60 +198,100 @@ collab-code-platform/
 │
 ├── .gitignore
 └── README.md
-⚙️ Installation
-Clone the repository
+```
+
+---
+
+## ⚙️ Installation
+
+### Clone the repository
+
+```bash
 git clone <repository-url>
 cd collab-code-platform
-Install frontend dependencies
+```
+
+### Install frontend dependencies
+
+```bash
 cd client
 npm install
-Install backend dependencies
+```
+
+### Install backend dependencies
+
+```bash
 cd ../server
 npm install
-🔑 Environment Variables
+```
 
-Create a .env file inside the server directory.
+---
 
+## 🔑 Environment Variables
+
+Create a `.env` file inside the **server** directory.
+
+```env
 PORT=5000
 
 MONGODB_URI=your_mongodb_connection_string
 
 JWT_SECRET=your_secret_key
+```
 
-Never commit your .env file or expose your database credentials publicly.
+Never commit your `.env` file or expose your database credentials publicly.
 
-▶️ Run the Project
-Start the backend
+---
+
+## ▶️ Run the Project
+
+### Start the backend
+
+```bash
 cd server
 node server.js
+```
 
 Backend:
 
+```text
 http://localhost:5000
-Start the frontend
+```
+
+### Start the frontend
 
 Open another terminal:
 
+```bash
 cd client
 npm run dev
+```
 
 Frontend:
 
+```text
 http://localhost:5173
-💻 Code Execution
+```
+
+---
+
+## 💻 Code Execution
 
 CollabCode currently supports C++ code execution.
 
 Users can:
 
-Write C++ code using Monaco Editor
-Provide custom input
-Compile and execute the program
-View program output
-View compilation errors
-Handle runtime failures
-Detect programs that exceed the execution time limit
-Example
+- Write C++ code using Monaco Editor
+- Provide custom input
+- Compile and execute the program
+- View program output
+- View compilation errors
+- Handle runtime failures
+- Detect programs that exceed the execution time limit
+
+### Example
+
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -250,104 +304,135 @@ int main() {
 
     return 0;
 }
+```
 
 Input:
 
+```text
 10 20
+```
 
 Output:
 
+```text
 30
-🔄 Real-Time Collaboration
+```
+
+---
+
+## 🔄 Real-Time Collaboration
 
 Multiple users can join the same room using a shared Room ID.
 
 For example:
 
+```text
 Room ID: gk3d9rtt
+```
 
 Users inside the room can:
 
-Edit the same code simultaneously
-See other connected users
-Exchange chat messages
-Leave the room explicitly
-Receive updated room state in real time
+- Edit the same code simultaneously
+- See other connected users
+- Exchange chat messages
+- Leave the room explicitly
+- Receive updated room state in real time
 
 Socket.IO is used for real-time communication between clients and the server.
 
-💾 Data Persistence
+---
+
+## 💾 Data Persistence
 
 MongoDB stores:
 
-Users
-Name
-Email
-Hashed password
-Timestamps
-Rooms
-Room ID
-Current code
-Chat messages
-Timestamps
+### Users
+
+- Name
+- Email
+- Hashed password
+- Timestamps
+
+### Rooms
+
+- Room ID
+- Current code
+- Chat messages
+- Timestamps
 
 When a user rejoins a room, previously saved code and chat history are restored.
 
-🔐 Authentication & Security
+---
+
+## 🔐 Authentication & Security
 
 CollabCode uses:
 
-JWT for authentication
-bcrypt for password hashing
-Protected frontend routes
-Server-side JWT verification
-Socket.IO authentication using JWT
-Password exclusion when retrieving user profiles
+- JWT for authentication
+- bcrypt for password hashing
+- Protected frontend routes
+- Server-side JWT verification
+- Socket.IO authentication using JWT
+- Password exclusion when retrieving user profiles
 
 The code execution service also applies execution and output limits.
 
 The current C++ execution system is intended for local development. Running arbitrary user code in a production environment requires stronger sandboxing and process isolation.
 
-🧪 Testing
+---
+
+## 🧪 Testing
 
 The project has been tested with multiple simultaneous users using separate browser sessions.
 
 Tested scenarios include:
 
-✅ Multiple users joining the same room
-✅ Real-time user presence
-✅ User leaving a room
-✅ Real-time code synchronization
-✅ Real-time chat
-✅ Persistent code and chat history
-✅ C++ execution
-✅ Program input/output
-✅ Compilation errors
-✅ Execution timeout
-🚀 Future Enhancements
-🌐 Support for additional programming languages such as Python and Java
-📁 File sharing
-👆 Live cursor and selection tracking
-🧑‍🤝‍🧑 Improved collaborative editing using CRDT/Operational Transform
-🐳 Container-based secure code execution
-🌐 Production deployment
-📹 Video/voice collaboration
-🌙 Light/Dark theme switching
-📊 Code execution history
-📸 Screenshots
+- ✅ Multiple users joining the same room
+- ✅ Real-time user presence
+- ✅ User leaving a room
+- ✅ Real-time code synchronization
+- ✅ Real-time chat
+- ✅ Persistent code and chat history
+- ✅ C++ execution
+- ✅ Program input/output
+- ✅ Compilation errors
+- ✅ Execution timeout
 
-Screenshots of the following features can be added here:
+---
 
-Login / Signup
-![alt text](image.png)
-Collaborative editor
-Online users
-Real-time chat
-C++ code execution
-Input / Output panel
-👨‍💻 Author
+## 🚀 Future Enhancements
 
-Rathin Kamble
+- 🌐 Support for additional programming languages such as Python and Java
+- 📁 File sharing
+- 👆 Live cursor and selection tracking
+- 🧑‍🤝‍🧑 Improved collaborative editing using CRDT/Operational Transform
+- 🐳 Container-based secure code execution
+- 🌐 Production deployment
+- 📹 Video/voice collaboration
+- 🌙 Light/Dark theme switching
+- 📊 Code execution history
 
-B.Tech Computer Science & Engineering
+---
+
+## 📸 Screenshots
+
+### 📝 Signup
+
+![Signup](./ss/Signup.png)
+
+### 🔐 Login
+
+![Login](./ss/Login.png)
+
+### 💻 Collaborative Coding Room
+
+![Collaborative Room](./ss/Editor.png)
+
+---
+
+## 👨‍💻 Author
+
+**Rathin Kamble**
+
+B.Tech Computer Science & Engineering  
 Walchand College of Engineering, Sangli
