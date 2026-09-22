@@ -3,7 +3,9 @@ import "../styles/OnlineUsers.css";
 function OnlineUsers({ users }) {
   return (
     <div className="users-panel">
-      <h3>Online Users: {users.length}</h3>
+      <h3 className="online-users-title">
+        Online Users: {users.length}
+      </h3>
 
       <ul>
         {users.map((user) => (

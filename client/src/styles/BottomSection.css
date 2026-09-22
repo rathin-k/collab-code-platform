@@ -3,7 +3,7 @@
   height: 100%;
 
   display: grid;
-  grid-template-rows: 200px minmax(0, 1fr);
+  grid-template-rows: 240px minmax(0, 1fr);
 
   gap: 16px;
 
@@ -12,7 +12,7 @@
 
 .users-wrapper,
 .chat-wrapper {
-  background: #27293d;
+  background: #55555b2e;
 
   border: 1px solid #2f3345;
   border-radius: 14px;
@@ -25,9 +25,14 @@
   overflow: hidden;
 }
 
+.users-wrapper {
+  overflow-y: auto;
+}
+
 .chat-wrapper {
   display: flex;
   flex-direction: column;
 
   min-height: 0;
 }
+
