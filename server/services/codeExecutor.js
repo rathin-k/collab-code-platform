@@ -163,8 +163,10 @@ const runExecutable = (executablePath, input) => {
     });
 
     // Send input to the program
-    executable.stdin.write(input || "");
-    executable.stdin.end();
+    if (input && input.length > 0) {
+      executable.stdin.write(input);
+      executable.stdin.end();
+    }
   });
 };
 
