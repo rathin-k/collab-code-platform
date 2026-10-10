@@ -10,7 +10,11 @@ function OnlineUsers({ users }) {
       <ul>
         {users.map((user) => (
           <li key={user.socketId}>
-            🟢 {user.name}
+            <span
+              className={`user-color-dot user-color-${user.color}`}
+            ></span>
+
+            {user.name}
           </li>
         ))}
       </ul>

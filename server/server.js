@@ -62,6 +62,28 @@ io.use(async (socket, next) => {
   }
 });
 
+const CURSOR_COLORS = [
+  "blue",
+  "green",
+  "purple",
+  "orange",
+  "pink",
+  "cyan",
+  "yellow",
+  "red",
+  "teal",
+  "violet",
+  "lime",
+  "rose",
+  "indigo",
+  "amber",
+  "emerald",
+  "sky",
+  "fuchsia",
+  "red-orange",
+  "turquoise",
+  "magenta",
+];
 
 // Socket connection
 io.on("connection", (socket) => {
@@ -86,6 +108,23 @@ io.on("connection", (socket) => {
       // Remember which room this socket belongs to
       socket.data.roomId = roomId;
 
+      // Get users already in the room
+      const existingSockets = await io.in(roomId).fetchSockets();
+
+      // Get colors currently being used
+      const usedColors = existingSockets
+       .map((connectedSocket) => connectedSocket.data.cursorColor)
+       .filter(Boolean);
+
+      // Find the first unused color
+      const availableColor = CURSOR_COLORS.find(
+        (color) => !usedColors.includes(color)
+      );
+
+      // Assign color to this user
+      socket.data.cursorColor =
+        availableColor || CURSOR_COLORS[0];
+
       // Send saved code
       socket.emit("load-code", room.code);
 
@@ -95,9 +134,26 @@ io.on("connection", (socket) => {
       // Get all sockets currently inside this room
       const sockets = await io.in(roomId).fetchSockets();
 
+      const existingCursors = sockets
+       .filter(
+         (connectedSocket) =>
+           connectedSocket.id !== socket.id &&
+           connectedSocket.data.cursor
+        )
+        .map((connectedSocket) => ({
+          socketId: connectedSocket.id,
+          name: connectedSocket.user.name,
+          color: connectedSocket.data.cursorColor,
+          position: connectedSocket.data.cursor.position,
+          selection: connectedSocket.data.cursor.selection,
+      }));
+
+     socket.emit("existing-cursors", existingCursors);
+
       const userList = sockets.map((connectedSocket) => ({
         socketId: connectedSocket.id,
         name: connectedSocket.user.name,
+        color: connectedSocket.data.cursorColor,
       }));
 
       console.log("Sending user list:", userList);
@@ -109,6 +165,44 @@ io.on("connection", (socket) => {
 
     } catch (error) {
       console.error("Join room error:", error);
+    }
+  });
+  
+    // =========================
+  // Cursor / Selection Sync
+  // =========================
+
+  socket.on("cursor-move", (data) => {
+    try {
+      const { roomId, position, selection } = data;
+
+      // Make sure the socket is actually in this room
+      if (socket.data.roomId !== roomId) {
+        return;
+      }
+
+      if (!position) {
+        return;
+      }
+
+      // Store cursor temporarily on the socket.
+      // This is NOT persisted in MongoDB.
+      socket.data.cursor = {
+        position,
+        selection: selection || null,
+      };
+
+      // Send cursor information to everyone else in the room
+      socket.to(roomId).emit("remote-cursor", {
+        socketId: socket.id,
+        name: socket.user.name,
+        color: socket.data.cursorColor,
+        position,
+        selection: selection || null,
+      });
+
+    } catch (error) {
+      console.error("Cursor sync error:", error);
     }
   });
 
@@ -165,6 +259,13 @@ io.on("connection", (socket) => {
     // Leave the Socket.IO room
     socket.leave(roomId);
 
+    socket.to(roomId).emit("cursor-left", {
+      socketId: socket.id,
+    });
+
+    socket.data.cursor = null;
+    socket.data.cursorColor = null;
+
     // Clear stored room information
     socket.data.roomId = null;
 
@@ -174,6 +275,7 @@ io.on("connection", (socket) => {
     const userList = sockets.map((connectedSocket) => ({
       socketId: connectedSocket.id,
       name: connectedSocket.user.name,
+      color: connectedSocket.data.cursorColor,
     }));
 
     console.log(
@@ -198,6 +300,10 @@ io.on("connection", (socket) => {
       return;
     }
 
+    socket.to(roomId).emit("cursor-left", {
+      socketId: socket.id,
+    });
+    
     try {
       // Get remaining users in the room
       const sockets = await io.in(roomId).fetchSockets();

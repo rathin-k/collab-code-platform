@@ -20,3 +20,91 @@
 .online-users-title {
   color: #ffffff;
 }
+
+.user-color-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.user-color-blue {
+  background-color: #3b82f6;
+}
+
+.user-color-green {
+  background-color: #22c55e;
+}
+
+.user-color-purple {
+  background-color: #a855f7;
+}
+
+.user-color-orange {
+  background-color: #f97316;
+}
+
+.user-color-pink {
+  background-color: #ec4899;
+}
+
+.user-color-cyan {
+  background-color: #06b6d4;
+}
+
+.user-color-yellow {
+  background-color: #eab308;
+}
+
+.user-color-red {
+  background-color: #ef4444;
+}
+
+.user-color-teal {
+  background-color: #14b8a6;
+}
+
+.user-color-violet {
+  background-color: #8b5cf6;
+}
+
+.user-color-lime {
+  background-color: #84cc16;
+}
+
+.user-color-rose {
+  background-color: #f43f5e;
+}
+
+.user-color-indigo {
+  background-color: #6366f1;
+}
+
+.user-color-amber {
+  background-color: #f59e0b;
+}
+
+.user-color-emerald {
+  background-color: #10b981;
+}
+
+.user-color-sky {
+  background-color: #0ea5e9;
+}
+
+.user-color-fuchsia {
+  background-color: #d946ef;
+}
+
+.user-color-red-orange {
+  background-color: #f4511e;
+}
+
+.user-color-turquoise {
+  background-color: #2dd4bf;
+}
+
+.user-color-magenta {
+  background-color: #d946ef;
+}
